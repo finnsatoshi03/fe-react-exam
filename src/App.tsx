@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 import AppLayout from "./layouts/AppLayout";
+import ProtectedRoute from "./components/protected-route";
 
 import Dashboard from "./pages/Dasboard";
 
@@ -15,7 +16,13 @@ export default function App() {
       <Routes>
         <Route index element={<Navigate replace to="dashboard" />} />
         {/* EMPLYEE DTR */}
-        <Route element={<AppLayout />}>
+        <Route
+          element={
+            <ProtectedRoute>
+              <AppLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route path="dashboard" element={<Dashboard />} />
         </Route>
         {/* public route */}

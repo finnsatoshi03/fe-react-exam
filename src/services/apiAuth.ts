@@ -23,15 +23,42 @@ export async function login(
   }
 }
 
+export async function forgotPassword(email: string): Promise<boolean> {
+  try {
+    const response = await fetch(
+      `http://localhost:8000/users?email=${encodeURIComponent(email)}`,
+    );
+    const users: User[] = await response.json();
+
+    return users.length > 0;
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    throw error;
+  }
+}
+
+// export async function getCurrentUser(): Promise<User | null> {
+//     const userId = localStorage.getItem('currentUserId');
+//     if (!userId) return null;
+
+//     try {
+//         const response = await fetch(`http://localhost:8000/users/${userId}`);
+//         return await response.json();
+//     } catch (error) {
+//         console.error("Get current user error:", error);
+//         return null;
+//     }
+// }
+
 export function logout() {
-  localStorage.removeItem("user");
+  localStorage.removeItem("currentUserId");
 }
 
 export function getCurrentUser(): User | null {
-  const userString = localStorage.getItem("user");
+  const userString = localStorage.getItem("currentUserId");
   return userString ? JSON.parse(userString) : null;
 }
 
 export function isAuthenticated(): boolean {
-  return !!localStorage.getItem("user");
+  return !!localStorage.getItem("currentUserId");
 }

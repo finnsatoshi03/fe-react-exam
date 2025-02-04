@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { toast } from "react-hot-toast";
 
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { Link } from "react-router-dom";
 import { login } from "../../services/apiAuth";
 
 const LoginSchema = z.object({
@@ -16,6 +16,8 @@ const LoginSchema = z.object({
 });
 
 export default function LoginForm() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -78,6 +80,8 @@ export default function LoginForm() {
         setLoginAttempts(0);
         setIsLoginDisabled(false);
         setLockoutCountdown(0);
+
+        navigate("/dashboard");
       } else {
         const newAttempts = loginAttempts + 1;
         setLoginAttempts(newAttempts);
