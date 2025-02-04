@@ -25,7 +25,6 @@ export default function ForgotPassForm() {
       setIsButtonEnabled(true);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        // Set specific error messages
         const emailErrorMessage = error.errors.find(
           (e) => e.path[0] === "email",
         )?.message;
