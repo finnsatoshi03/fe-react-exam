@@ -1,5 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import { ReactNode } from "react";
+import { UserAccount } from "./auth/user-account";
+import { isAuthenticated } from "../services/apiAuth";
 
 const NavItem = ({ children }: { children: ReactNode }) => (
   <li className="flex items-center gap-1">
@@ -16,7 +18,7 @@ export default function Navbar() {
       <ul className="flex gap-8 text-sm">
         <NavItem>My Request</NavItem>
         <NavItem>Administration Tools</NavItem>
-        <NavItem>My Account</NavItem>
+        {isAuthenticated() && <UserAccount />}
       </ul>
     </nav>
   );

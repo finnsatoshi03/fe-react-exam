@@ -10,13 +10,11 @@ export async function login(
       `${API_BASE_URL}/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`,
     );
     const users: User[] = await response.json();
-
     if (users.length > 0) {
-      // Store user ID in localStorage for session management
       localStorage.setItem("currentUserId", users[0].id.toString());
+      localStorage.setItem("currentUser", JSON.stringify(users[0]));
       return users[0];
     }
-
     return null;
   } catch (error) {
     console.error("Login error:", error);
@@ -38,28 +36,24 @@ export async function forgotPassword(email: string): Promise<boolean> {
   }
 }
 
-// export async function getCurrentUser(): Promise<User | null> {
-//     const userId = localStorage.getItem('currentUserId');
-//     if (!userId) return null;
+export async function getCurrentUser(): Promise<User | null> {
+  const userStr = localStorage.getItem("currentUser");
+  if (!userStr) return null;
 
-//     try {
-//         const response = await fetch(`${API_BASE_URL}/users/${userId}`);
-//         return await response.json();
-//     } catch (error) {
-//         console.error("Get current user error:", error);
-//         return null;
-//     }
-// }
+  try {
+    const user = JSON.parse(userStr) as User;
+    return user;
+  } catch (error) {
+    console.error("Error parsing user data:", error);
+    return null;
+  }
+}
 
 export function logout() {
   localStorage.removeItem("currentUserId");
-}
-
-export function getCurrentUser(): User | null {
-  const userString = localStorage.getItem("currentUserId");
-  return userString ? JSON.parse(userString) : null;
+  localStorage.removeItem("currentUser");
 }
 
 export function isAuthenticated(): boolean {
-  return !!localStorage.getItem("currentUserId");
+  return !!localStorage.getItem("currentUser");
 }
