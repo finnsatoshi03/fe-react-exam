@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Link } from "react-router-dom";
+import { login } from "../../services/apiAuth";
 
 const LoginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -70,13 +71,10 @@ export default function LoginForm() {
     setLoginError("");
 
     try {
-      const response = await fetch(
-        `http://localhost:8000/users?email=${email}&password=${password}`,
-      );
-      const users = await response.json();
+      const user = await login(email, password);
 
-      if (users.length > 0) {
-        toast.success(`Welcome, ${users[0].username}! Login Successful!`);
+      if (user) {
+        toast.success(`Welcome, ${user.username}! Login Successful!`);
         setLoginAttempts(0);
         setIsLoginDisabled(false);
         setLockoutCountdown(0);
