@@ -1,4 +1,5 @@
 import { User } from "../lib/types";
+import { API_BASE_URL } from "./apiURL";
 
 export async function login(
   email: string,
@@ -6,7 +7,7 @@ export async function login(
 ): Promise<User | null> {
   try {
     const response = await fetch(
-      `http://localhost:8000/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`,
+      `${API_BASE_URL}/users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`,
     );
     const users: User[] = await response.json();
 
@@ -26,7 +27,7 @@ export async function login(
 export async function forgotPassword(email: string): Promise<boolean> {
   try {
     const response = await fetch(
-      `http://localhost:8000/users?email=${encodeURIComponent(email)}`,
+      `${API_BASE_URL}/users?email=${encodeURIComponent(email)}`,
     );
     const users: User[] = await response.json();
 
@@ -42,7 +43,7 @@ export async function forgotPassword(email: string): Promise<boolean> {
 //     if (!userId) return null;
 
 //     try {
-//         const response = await fetch(`http://localhost:8000/users/${userId}`);
+//         const response = await fetch(`${API_BASE_URL}/users/${userId}`);
 //         return await response.json();
 //     } catch (error) {
 //         console.error("Get current user error:", error);

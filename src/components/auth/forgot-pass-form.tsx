@@ -6,6 +6,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import { forgotPassword } from "../../services/apiAuth";
 
 const LoginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -39,12 +40,9 @@ export default function ForgotPassForm() {
     e.preventDefault();
 
     try {
-      const response = await fetch(
-        `http://localhost:8000/users?email=${email}`,
-      );
-      const users = await response.json();
+      const user = await forgotPassword(email);
 
-      if (users.length > 0) {
+      if (user) {
         toast.success(
           `An email has been sent to ${email}. Please check your inbox.`,
         );
