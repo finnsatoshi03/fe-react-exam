@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dasboard";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
+import PublicRoute from "./components/public-route";
 
 export default function App() {
   return (
@@ -26,8 +27,23 @@ export default function App() {
           <Route path="dashboard" element={<Dashboard />} />
         </Route>
         {/* public route */}
-        <Route path="login" element={<Login />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route
+          path="login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="forgot-password"
+          element={
+            <PublicRoute>
+              <ForgotPassword />
+            </PublicRoute>
+          }
+        />
+
         <Route path="*" element={<NotFound />} />
       </Routes>
 
