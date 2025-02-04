@@ -1,8 +1,11 @@
+import { useEffect, useState } from "react";
 import { z } from "zod";
+import { toast } from "react-hot-toast";
+
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const LoginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -18,8 +21,28 @@ export default function LoginForm() {
   const [loginError, setLoginError] = useState("");
   const [loginAttempts, setLoginAttempts] = useState(0);
   const [isLoginDisabled, setIsLoginDisabled] = useState(false);
+  const [lockoutCountdown, setLockoutCountdown] = useState(0);
 
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
+
+  useEffect(() => {
+    let timerId: number | undefined;
+    if (isLoginDisabled && lockoutCountdown > 0) {
+      timerId = setInterval(() => {
+        setLockoutCountdown((prevCountdown) => {
+          if (prevCountdown <= 1) {
+            setIsLoginDisabled(false);
+            return 0;
+          }
+          return prevCountdown - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (timerId) clearInterval(timerId);
+    };
+  }, [isLoginDisabled, lockoutCountdown]);
 
   // for validation
   useEffect(() => {
@@ -53,38 +76,34 @@ export default function LoginForm() {
       const users = await response.json();
 
       if (users.length > 0) {
-        const user = users[0];
-        alert(`Welcome, ${user.username}! Login Successful!`);
+        toast.success(`Welcome, ${users[0].username}! Login Successful!`);
+        setLoginAttempts(0);
+        setIsLoginDisabled(false);
+        setLockoutCountdown(0);
       } else {
         const newAttempts = loginAttempts + 1;
         setLoginAttempts(newAttempts);
-        console.log("newAttempts", newAttempts);
 
         if (newAttempts >= 3) {
           setIsLoginDisabled(true);
+          setLockoutCountdown(300); // 5 minutes (300 seconds)
           setLoginError(
-            "Maximum login attempts reached. Please try again later.",
+            "Maximum login attempts reached. Please try again in 5 minutes.",
           );
         } else {
-          setLoginError("Invalid email or password.");
+          toast.error("Invalid email or password.");
         }
       }
     } catch (error) {
       console.error("Login error:", error);
-      setLoginError("An error occurred. Please try again.");
+      toast.error("An error occurred. Please try again.");
     }
-  };
-
-  const resetLoginAttempts = () => {
-    setLoginAttempts(0);
-    setIsLoginDisabled(false);
-    setLoginError("");
   };
 
   return (
     <>
       <form onSubmit={handleLogin} className="w-full">
-        <div className="mx-auto max-w-lg space-y-6 rounded-lg bg-white px-6 py-4 md:px-8 md:py-6">
+        <div className="mx-auto max-w-xs space-y-6 rounded-lg bg-white px-6 py-4 sm:max-w-lg md:px-8 md:py-6">
           <div className="space-y-2">
             <Label htmlFor="name">Name</Label>
             <Input
@@ -114,15 +133,11 @@ export default function LoginForm() {
           {loginError && (
             <div className="text-center text-sm text-red-500">
               {loginError}
-              {/* remove if not needed (for dev purpose, can change to timer) */}
-              {isLoginDisabled && (
-                <button
-                  type="button"
-                  onClick={resetLoginAttempts}
-                  className="ml-2 text-blue-500 underline"
-                >
-                  Reset
-                </button>
+              {isLoginDisabled && lockoutCountdown > 0 && (
+                <div className="mt-2 text-blue-500">
+                  Time remaining: {Math.floor(lockoutCountdown / 60)} minutes{" "}
+                  {lockoutCountdown % 60} seconds
+                </div>
               )}
             </div>
           )}
@@ -136,7 +151,9 @@ export default function LoginForm() {
             Login
           </Button>
 
-          <p className="text-center text-slate-400">Forgot Password?</p>
+          <Link to="/forgot-password">
+            <p className="text-center text-slate-400">Forgot Password?</p>
+          </Link>
         </div>
       </form>
     </>

@@ -4,28 +4,19 @@
       "id": 1,
       "username": "john_doe",
       "email": "john.doe@company.com",
-      "password": "hashedPassword123!",
-      "resetToken": null,
-      "resetTokenExpiry": null,
-      "lastLogin": "2024-02-04T10:30:00Z"
+      "password": "hashedPassword123!"
     },
     {
       "id": 2,
       "username": "jane_smith",
       "email": "jane.smith@company.com",
-      "password": "securePass456@",
-      "resetToken": null,
-      "resetTokenExpiry": null,
-      "lastLogin": "2024-02-03T15:45:00Z"
+      "password": "securePass456@"
     },
     {
       "id": 3,
       "username": "mike_johnson",
       "email": "mike.johnson@company.com",
-      "password": "complexPass789#",
-      "resetToken": "temp_reset_token_123",
-      "resetTokenExpiry": "2024-02-05T18:00:00Z",
-      "lastLogin": "2024-02-02T09:15:00Z"
+      "password": "complexPass789#"
     }
   ],
   "employees": [

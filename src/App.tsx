@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 import AppLayout from "./layouts/AppLayout";
 
@@ -6,7 +7,7 @@ import Dashboard from "./pages/Dasboard";
 
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
-import { Toaster } from "react-hot-toast";
+import ForgotPassword from "./pages/ForgotPassword";
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
         </Route>
         {/* public route */}
         <Route path="login" element={<Login />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
 
