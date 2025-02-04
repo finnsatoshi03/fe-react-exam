@@ -71,6 +71,48 @@
       ],
       "totalWorkHours": 4,
       "status": "partial"
+    },
+    {
+      "id": "22fe",
+      "employeeId": 1,
+      "date": "2025-02-04",
+      "timeIns": [
+        {
+          "timeIn": "2025-02-04T06:16:48.859Z",
+          "timeOut": "2025-02-04T06:17:05.168Z",
+          "type": "morning"
+        }
+      ],
+      "totalWorkHours": 0.004530277777777778,
+      "status": "completed"
+    },
+    {
+      "id": "0a63",
+      "employeeId": 1,
+      "date": "2025-02-04",
+      "timeIns": [
+        {
+          "timeIn": "2025-02-04T06:17:09.145Z",
+          "timeOut": null,
+          "type": "morning"
+        }
+      ],
+      "totalWorkHours": 0,
+      "status": "pending"
+    },
+    {
+      "id": "e8fe",
+      "employeeId": 1,
+      "date": "2025-02-04",
+      "timeIns": [
+        {
+          "timeIn": "2025-02-04T06:17:13.233Z",
+          "timeOut": null,
+          "type": "morning"
+        }
+      ],
+      "totalWorkHours": 0,
+      "status": "pending"
     }
   ]
 }
