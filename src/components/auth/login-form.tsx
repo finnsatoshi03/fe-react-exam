@@ -6,11 +6,11 @@ export default function LoginForm() {
   return (
     <form className="w-full">
       <div className="mx-auto max-w-lg space-y-6 rounded-lg bg-white px-6 py-4 md:px-8 md:py-6">
-        <div>
+        <div className="space-y-2">
           <Label htmlFor="name">Name</Label>
           <Input id="name" type="name" placeholder="Username or Email" />
         </div>
-        <div>
+        <div className="space-y-2">
           <Label htmlFor="password">Password</Label>
           <Input id="password" type="password" placeholder="Password" />
         </div>
