@@ -134,7 +134,7 @@ export default function LoginForm() {
             <div className="text-center text-sm text-red-500">
               {loginError}
               {isLoginDisabled && lockoutCountdown > 0 && (
-                <div className="mt-2 text-blue-500">
+                <div>
                   Time remaining: {Math.floor(lockoutCountdown / 60)} minutes{" "}
                   {lockoutCountdown % 60} seconds
                 </div>

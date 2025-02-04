@@ -1,6 +1,6 @@
 import React from "react";
 
-type Variant = "primary" | "secondary" | "destructive";
+type Variant = "primary" | "secondary" | "destructive" | "ghost";
 type ButtonSize = "default" | "sm" | "lg";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -20,6 +20,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 focus:ring-blue-500 cursor-pointer",
       destructive:
         "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 cursor-pointer",
+      ghost: "text-gray-700 focus:ring-blue-500 cursor-pointer",
     };
 
     const sizeStyles: Record<ButtonSize, string> = {
@@ -31,7 +32,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        className={`inline-flex items-center justify-center rounded-md font-medium shadow-sm focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${variantStyles[variant]} ${sizeStyles[size]} ${className} `}
+        className={`inline-flex items-center justify-center rounded-md font-medium focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${variantStyles[variant]} ${sizeStyles[size]} ${className} `}
         {...props}
       >
         {children}
