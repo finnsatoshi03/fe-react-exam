@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import {
   Table,
   TableBody,
@@ -7,16 +8,17 @@ import {
   TableHeaderCell,
   TableRow,
 } from "../components/ui/table";
+import { Button } from "../components/ui/button";
+import Dialog from "../components/ui/dialog";
+
 import { TimeRecord } from "../lib/types";
 import { formatDate, formatTime } from "../lib/helpers";
+
 import {
   getCurrentUserTimeRecords,
   recordTimeIn,
   recordTimeOut,
 } from "../services/apiUser";
-import { Button } from "../components/ui/button";
-import Dialog from "../components/ui/dialog";
-import toast from "react-hot-toast";
 
 export default function Dashboard() {
   const userId = localStorage.getItem("currentUserId");
