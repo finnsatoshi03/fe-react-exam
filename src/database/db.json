@@ -23,16 +23,16 @@
     {
       "id": 1,
       "employeeId": 1,
-      "date": "2025-02-04",
+      "date": "2024-02-02",
       "timeIns": [
         {
-          "timeIn": "2025-02-04T08:55:00Z",
-          "timeOut": "2025-02-04T12:30:00Z",
+          "timeIn": "2024-02-02T08:55:00Z",
+          "timeOut": "2024-02-02T12:30:00Z",
           "type": "morning"
         },
         {
-          "timeIn": "2025-02-04T13:15:00Z",
-          "timeOut": "2025-02-04T17:45:00Z",
+          "timeIn": "2024-02-02T13:15:00Z",
+          "timeOut": "2024-02-02T17:45:00Z",
           "type": "afternoon"
         }
       ],
@@ -42,16 +42,16 @@
     {
       "id": 2,
       "employeeId": 2,
-      "date": "2025-02-04",
+      "date": "2024-02-02",
       "timeIns": [
         {
-          "timeIn": "2025-02-04T09:00:00Z",
-          "timeOut": "2025-02-04T12:45:00Z",
+          "timeIn": "2024-02-02T09:00:00Z",
+          "timeOut": "2024-02-02T12:45:00Z",
           "type": "morning"
         },
         {
-          "timeIn": "2025-02-04T13:30:00Z",
-          "timeOut": "2025-02-04T18:00:00Z",
+          "timeIn": "2024-02-02T13:30:00Z",
+          "timeOut": "2024-02-02T18:00:00Z",
           "type": "afternoon"
         }
       ],
@@ -61,16 +61,30 @@
     {
       "id": 3,
       "employeeId": 3,
-      "date": "2025-02-04",
+      "date": "2024-02-02",
       "timeIns": [
         {
-          "timeIn": "2025-02-04T10:00:00Z",
-          "timeOut": "2025-02-04T14:00:00Z",
+          "timeIn": "2024-02-02T10:00:00Z",
+          "timeOut": "2024-02-02T14:00:00Z",
           "type": "partial"
         }
       ],
       "totalWorkHours": 4,
       "status": "partial"
+    },
+    {
+      "id": "e9e2",
+      "employeeId": 1,
+      "date": "2025-02-04",
+      "timeIns": [
+        {
+          "timeIn": "2025-02-04T06:32:42.207Z",
+          "timeOut": null,
+          "type": "morning"
+        }
+      ],
+      "totalWorkHours": 0,
+      "status": "pending"
     }
   ]
 }

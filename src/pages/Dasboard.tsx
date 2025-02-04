@@ -13,29 +13,41 @@ import Dialog from "../components/ui/dialog";
 
 import { TimeRecord } from "../lib/types";
 import { formatDate, formatTime } from "../lib/helpers";
-
 import {
   getCurrentUserTimeRecords,
   recordTimeIn,
   recordTimeOut,
 } from "../services/apiUser";
 
+const RECORDS_PER_PAGE = 10;
+const MAX_RECORDS = 100;
+
 export default function Dashboard() {
   const userId = localStorage.getItem("currentUserId");
-
   const [timeRecords, setTimeRecords] = useState<TimeRecord[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [showTimeInDialog, setShowTimeInDialog] = useState(false);
   const [showTimeOutDialog, setShowTimeOutDialog] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const totalPages = Math.min(
+    Math.ceil(timeRecords.length / RECORDS_PER_PAGE),
+    Math.ceil(MAX_RECORDS / RECORDS_PER_PAGE),
+  );
+
+  const paginatedRecords = timeRecords.slice(
+    (currentPage - 1) * RECORDS_PER_PAGE,
+    currentPage * RECORDS_PER_PAGE,
+  );
+
   const fetchTimeRecords = async () => {
     try {
       setIsLoading(true);
       const records = await getCurrentUserTimeRecords();
-      const sortedRecords = records.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-      );
+      const sortedRecords = records
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, MAX_RECORDS);
       setTimeRecords(sortedRecords);
     } catch (err) {
       toast.error("Failed to fetch time records");
@@ -110,6 +122,36 @@ export default function Dashboard() {
 
   const canTimeIn = !hasActiveTimeIn();
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const renderPaginationButtons = () => {
+    const buttons = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - 2);
+    const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      buttons.push(
+        <Button
+          key={i}
+          size="sm"
+          onClick={() => handlePageChange(i)}
+          className="mx-1"
+        >
+          {i}
+        </Button>,
+      );
+    }
+
+    return buttons;
+  };
+
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -117,6 +159,24 @@ export default function Dashboard() {
       </div>
     );
   }
+
+  const renderStatusBadge = (status: string) => {
+    const statusStyles = {
+      completed: "bg-green-100 text-green-800",
+      pending: "bg-yellow-100 text-yellow-800",
+      rejected: "bg-red-100 text-red-800",
+    };
+
+    return (
+      <span
+        className={`rounded px-2 py-1 text-sm ${
+          statusStyles[status as keyof typeof statusStyles]
+        }`}
+      >
+        {status}
+      </span>
+    );
+  };
 
   return (
     <div className="p-4">
@@ -200,52 +260,78 @@ export default function Dashboard() {
       {timeRecords.length === 0 ? (
         <p>No time records found.</p>
       ) : (
-        <Table variant="bordered">
-          <TableHeader>
-            <TableRow>
-              <TableHeaderCell>Date</TableHeaderCell>
-              <TableHeaderCell>Time In</TableHeaderCell>
-              <TableHeaderCell>Time Out</TableHeaderCell>
-              <TableHeaderCell>Total Work Hours</TableHeaderCell>
-              <TableHeaderCell>Status</TableHeaderCell>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {timeRecords.map((record) => (
-              <TableRow key={record.id}>
-                <TableCell>{formatDate(record.date)}</TableCell>
-                <TableCell>
-                  {record.timeIns.map((timeEntry, index) => (
-                    <div key={index} className="mb-1">
-                      {formatTime(timeEntry.timeIn)}
-                    </div>
-                  ))}
-                </TableCell>
-                <TableCell>
-                  {record.timeIns.map((timeEntry, index) => (
-                    <div key={index} className="mb-1">
-                      {timeEntry.timeOut ? formatTime(timeEntry.timeOut) : "-"}
-                    </div>
-                  ))}
-                </TableCell>
-                <TableCell>{record.totalWorkHours.toFixed(2)} hrs</TableCell>
-                <TableCell>
-                  <span
-                    className={`rounded px-2 py-1 text-sm ${
-                      record.status === "approved"
-                        ? "bg-green-100 text-green-800"
-                        : record.status === "pending"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-red-100 text-red-800"
-                    } `}
-                  >
-                    {record.status}
-                  </span>
-                </TableCell>
+        <div className="space-y-4">
+          <Table variant="bordered">
+            <TableHeader>
+              <TableRow>
+                <TableHeaderCell>Date</TableHeaderCell>
+                <TableHeaderCell>Time In</TableHeaderCell>
+                <TableHeaderCell>Time Out</TableHeaderCell>
+                <TableHeaderCell>Total Work Hours</TableHeaderCell>
+                <TableHeaderCell>Status</TableHeaderCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {paginatedRecords.map((record) => (
+                <TableRow key={record.id}>
+                  <TableCell>{formatDate(record.date)}</TableCell>
+                  <TableCell>
+                    {record.timeIns.map((timeEntry, index) => (
+                      <div key={index} className="mb-1">
+                        {formatTime(timeEntry.timeIn)}
+                      </div>
+                    ))}
+                  </TableCell>
+                  <TableCell>
+                    {record.timeIns.map((timeEntry, index) => (
+                      <div key={index} className="mb-1">
+                        {timeEntry.timeOut
+                          ? formatTime(timeEntry.timeOut)
+                          : "-"}
+                      </div>
+                    ))}
+                  </TableCell>
+                  <TableCell>{record.totalWorkHours.toFixed(2)} hrs</TableCell>
+                  <TableCell>{renderStatusBadge(record.status)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center space-x-2">
+              <Button
+                size="sm"
+                onClick={() => handlePageChange(1)}
+                disabled={currentPage === 1}
+              >
+                First
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Button>
+              {renderPaginationButtons()}
+              <Button
+                size="sm"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => handlePageChange(totalPages)}
+                disabled={currentPage === totalPages}
+              >
+                Last
+              </Button>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );
